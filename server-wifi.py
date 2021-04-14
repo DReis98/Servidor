@@ -1,19 +1,23 @@
-import socket
+from socket import *
 
+from xmlrpc import client
+from xmlrpc.server import *
+
+# SOCKET STUFF 
 localIP = "192.168.1.67"
 localPort = 3001
 bufferSize = 1024
 
-msgFromServer = "Hello UDP Client"
-bytesToSend = str.encode(msgFromServer)
-
 # Create a datagram socket
-UDPServerSocket = socket.socket(family = socket.AF_INET, type = socket.SOCK_DGRAM)
+UDPServerSocket = socket(family = AF_INET, type = SOCK_DGRAM)
 
 # Bind to address and ip
 UDPServerSocket.bind((localIP, localPort))
 
 print("UDP server up and listening")
+
+# CONNECTION TO DATABASES
+dbWiFi = client.ServerProxy("http://127.0.0.1:8001/apiWiFiLog")
 
 while(True):
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
@@ -21,9 +25,6 @@ while(True):
     address = bytesAddressPair[1]
 
     message = message.decode(encoding = 'UTF-8', errors = 'strict')
-
-    #clientMsg = "Message received: {}".format(message)
-    #clientIP = "Client IP Address: {}".format(address)
 
     if message == "close":
         UDPServerSocket.close()
@@ -33,9 +34,7 @@ while(True):
     file.write(message + "\n")
     file.close()
 
+    dbWiFi.newWiFiLog()
+
     print(message)
     print("")
-    #print(clientIP)
-
-    # Sending a reply to client
-    #UDPServerSocket.sendto(str.encode("Received: " + clientMsg), address)
