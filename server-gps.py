@@ -30,8 +30,10 @@ while(True):
         UDPServerSocket.close()
         break
 
-    dbGPS.newGPSLog()
+    message = message.split()
+    number = dbGPS.newGPSLog(message[0], message[1], message[2], float(message[3]), float(message[4]))
 
+    print(number)
     print(message)
     print("")
 
