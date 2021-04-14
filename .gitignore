@@ -1,4 +1,3 @@
-text-gps.txt
-text-wifi.txt
-dbWiFi.sqlite
 dbGPS.sqlite
+dbUser.sqlite
+dbWiFi.sqlite
