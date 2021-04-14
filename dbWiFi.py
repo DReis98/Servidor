@@ -16,8 +16,6 @@ db_exists = False
 if path.exists(DATABASE_FILE):
     db_exists = True
 
-print(db_exists)
-
 engine = create_engine('sqlite:///%s'%(DATABASE_FILE), echo = False)
 
 Base = declarative_base()
@@ -45,6 +43,11 @@ handler = XMLRPCHandler('apiWiFiLog')
 handler.connect(app, '/apiWiFiLog')
 
 # HANDLER FUNCTIONS
+
+"""
+Creates a new entry in WiFiLog database.
+Receives the parameters and returns the sequential id. In case of error, returns 0.
+"""
 @handler.register
 def newWiFiLog(id_user, data, hora, ssid):
     print("called newWiFiLog function")
