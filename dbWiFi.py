@@ -46,9 +46,21 @@ handler.connect(app, '/apiWiFiLog')
 
 # HANDLER FUNCTIONS
 @handler.register
-def newWiFiLog():
+def newWiFiLog(id_user, data, hora, ssid):
     print("called newWiFiLog function")
-    return
+    number = 0
+
+    newWiFi = WiFiLog(id_user = id_user, data = data, hora = hora, ssid = ssid)
+    try:
+        session.add(newWiFi)
+        session.commit()
+        number = newWiFi.id
+        session.close()
+        print("Added successfully") 
+    except:
+        print("Failed adding wifi log")
+
+    return number
 
 # OTHER FUNCTIONS
 
