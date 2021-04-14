@@ -30,11 +30,8 @@ while(True):
         UDPServerSocket.close()
         break
 
-    file = open("text-wifi.txt", "a")
-    file.write(message + "\n")
-    file.close()
-
     dbWiFi.newWiFiLog()
 
     print(message)
     print("")
+

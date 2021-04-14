@@ -30,10 +30,6 @@ while(True):
         UDPServerSocket.close()
         break
 
-    file = open("text-gps.txt", "a")
-    file.write(message + "\n")
-    file.close()
-
     dbGPS.newGPSLog()
 
     print(message)
