@@ -60,8 +60,9 @@ def newGPSLog(id_user, data, hora, lat, lon):
         session.add(newGPS)
         session.commit()
         number = newGPS.id
-        session.close()
         print("Added successfully") 
+        print(newGPS.__repr__())
+        session.close()   
     except:
         print("Failed adding gps log")
 
