@@ -9,36 +9,38 @@ localPort = 3001
 bufferSize = 1024
 
 # Create a datagram socket
-TCPServerSocket = socket(family = AF_INET, type = SOCK_STREAM)
+UDPServerSocket = socket(family = AF_INET, type = SOCK_DGRAM)
 
 # Bind to address and ip
-TCPServerSocket.bind((localIP, localPort))
+UDPServerSocket.bind((localIP, localPort))
 
 # Socket listening
-TCPServerSocket.listen()
+#TCPServerSocket.listen()
 
-print("TCP server up and listening")
+print("UDP user server up and listening")
 
 # CONNECTION TO DATABASES
 dbUser = client.ServerProxy("http://127.0.0.1:8002/apiUser")
 
 while(True):
-    conn, address = TCPServerSocket.accept()
+    message, address = UDPServerSocket.recvfrom(bufferSize)
 
-    message = conn.recv(bufferSize)
+    print(message)
+    print()
 
-    if not message:
-        break
+    message = message.decode(encoding = 'UTF-8', errors = 'strict')
 
     print(message)
     print()
 
     if message == "close":
-        TCPServerSocket.close()
+        UDPServerSocket.close()
         break
 
     messageToSend = message + " check"
 
-    conn.send(message)
+    bytesToSend = str.encode(messageToSend)
+
+    UDPServerSocket.sendto(bytesToSend, address)
 
 
