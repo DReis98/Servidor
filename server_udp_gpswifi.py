@@ -33,12 +33,15 @@ while(True):
 
     message = message.split()
 
+    
+    print(message)
+    
+
     if message[0] == "GPS":
         number = dbGPS.newGPSLog(message[1], message[2], message[3], float(message[4]), float(message[5]))
+        print(number)
+        print("")
     elif message[0] == "WiFi":
         number = dbWiFi.newWiFiLog(message[1], message[2], message[3], message[4])
-
-    print(number)
-    print(message)
-    print("")
-
+        print(number)
+        print("")

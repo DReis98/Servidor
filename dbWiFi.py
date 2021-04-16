@@ -60,6 +60,7 @@ def newWiFiLog(id_user, data, hora, ssid):
         number = newWiFi.id
         print("Added successfully") 
         print(newWiFi.__repr__())
+        print()
         session.close()
     except:
         print("Failed adding wifi log")

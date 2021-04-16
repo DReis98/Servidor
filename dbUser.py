@@ -6,6 +6,7 @@ from os import path
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy import ForeignKey
+from sqlalchemy import and_
 from sqlalchemy.orm import relationship, scoped_session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -51,17 +52,47 @@ def newUser(username, password):
     print("called newUser function")
     number = 0
 
-    newUSer = User(username = username, password = password)
+    newUser = User(username = username, password = password)
     try:
-        session.add(newUSer)
+        session.add(newUser)
         session.commit()
-        number = newUSer.id
-        session.close()
+        number = newUser.id
         print("Added successfully") 
+        print(newUser.__repr__())
+        print()
+        session.close()
     except:
         print("Failed adding user")
 
     return number
+
+"""
+Looks if there is a certain username in the database
+Returns the number of entries with that specific username. Must be 0 or 1
+"""
+@handler.register
+def checkUserExists(username):
+    print("called checkUserExists function")
+    users = session.query(User).filter(User.username == username).all()
+    session.close()
+    count = 0
+    for user in users:
+        count = count + 1
+    return count
+
+"""
+Looks if there is a certain username has a specific password
+Returns the number of entries with that specific username and password. Must be 0 or 1
+"""
+@handler.register
+def checkUserPassword(username, password):
+    print("called checkUserPassword function")
+    users = session.query(User).filter(and_(User.username == username, User.password == password)).all()
+    session.close()
+    count = 0
+    for user in users:
+        count = count + 1
+    return count
 
 # OTHER FUNCTIONS
 
