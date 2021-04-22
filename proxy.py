@@ -16,5 +16,9 @@ dbUser = client.ServerProxy("http://127.0.0.1:8002/apiUser")
 def index():
     return render_template("index.html")
 
+@app.route("/motivation")
+def motivation():
+    return render_template("motivation.html")
+
 if __name__ == "__main__":
     app.run(host = '0.0.0.0', port = 3002, debug = True)
