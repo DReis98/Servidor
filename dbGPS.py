@@ -26,12 +26,18 @@ class GPSLog(Base):
     id = Column(Integer, primary_key = True)
     id_user = Column(String)
     data = Column(String)
+    data_dia = Column(Integer)
+    data_mes = Column(Integer)
+    data_ano = Column(Integer)
     hora = Column(String)
+    hora_hora = Column(Integer)
+    hora_minuto = Column(Integer)
+    hora_segundo = Column(Integer)
     lat = Column(Float)
     lon = Column(Float)
 
     def __repr__(self):
-        return "<id: %d, id_user: %s, data: %s, hora: %s, lat: %f, lon: %f>" % (self.id, self.id_user, self.data, self.hora, self.lat, self.lon)
+        return "<id: %d, id_user: %s, data: %s, data_dia: %d, data_mes: %d, data_ano: %d, hora: %s, hora_hora: %d, hora_minuto: %d, hora_segundo: %d, lat: %f, lon: %f>" % (self.id, self.id_user, self.data, self.data_dia, self.data_mes, self.data_ano, self.hora, self.hora_hora, self.hora_minuto, self.hora_segundo, self.lat, self.lon)
 
 # CREATE TABLES FOR THE DATA MODELS
 Base.metadata.create_all(engine)
@@ -51,11 +57,20 @@ Receives the parameters and returns the sequential id. In case of error, returns
 """
 @handler.register
 def newGPSLog(id_user, data, hora, lat, lon):
-    print("called newGPSLog function")
-
     number = 0
 
-    newGPS = GPSLog(id_user = id_user, data = data, hora = hora, lat = lat, lon = lon)
+    # data e hora 
+    d = data.split("-")
+    data_dia = int(d[0])
+    data_mes = int(d[1])
+    data_ano = int(d[2])
+
+    h = hora.split(":")
+    hora_hora = int(h[0])
+    hora_minuto = int(h[1])
+    hora_segundo = int(h[2])
+
+    newGPS = GPSLog(id_user = id_user, data = data, data_dia = data_dia, data_mes = data_mes, data_ano = data_ano, hora = hora, hora_hora = hora_hora, hora_minuto = hora_minuto, hora_segundo = hora_segundo, lat = lat, lon = lon)
     try:
         session.add(newGPS)
         session.commit()

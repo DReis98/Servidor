@@ -42,8 +42,6 @@ while(True):
     if nbUser == 0:
         messageToSend = "created"
         user = dbUser.newUser(username, password)
-        print("created user")
-        print(user)
     elif nbUser == 1:
         nbUserPass = dbUser.checkUserPassword(username, password)
         # wrong password
