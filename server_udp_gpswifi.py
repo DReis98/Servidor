@@ -1,7 +1,9 @@
+import xmlrpc.server
+
 from socket import socket, AF_INET, SOCK_DGRAM
 
 from xmlrpc import client
-from xmlrpc.server import *
+
 
 # SOCKET STUFF 
 localIP = "192.168.1.67"
