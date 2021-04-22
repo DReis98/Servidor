@@ -1,4 +1,4 @@
-from socket import *
+from socket import socket, AF_INET, SOCK_DGRAM
 
 from xmlrpc import client
 from xmlrpc.server import *
