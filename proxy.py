@@ -13,6 +13,10 @@ dbUser = client.ServerProxy("http://127.0.0.1:8002/apiUser")
 
 # ENDPOINTS
 @app.route("/")
+def main():
+    return "Hello World!"
+
+@app.route("/random")
 def index():
     return render_template("index.html")
 
