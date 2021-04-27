@@ -31,6 +31,9 @@ class User(Base):
     def __repr__(self):
         return "<id: %d, username: %s, password: %s>" % (self.id, self.username, self.password)
 
+    def toDictionary(self):
+        return {"id": self.id, "username": self.username, "password": self.password}
+
 # CREATE TABLES FOR THE DATA MODELS
 Base.metadata.create_all(engine)
 
@@ -49,7 +52,6 @@ Receives the parameters and returns the sequential id. In case of error, returns
 """
 @handler.register
 def newUser(username, password):
-    print("called newUser function")
     number = 0
 
     newUser = User(username = username, password = password)
@@ -93,6 +95,21 @@ def checkUserPassword(username, password):
     for user in users:
         count = count + 1
     return count
+
+"""
+Returns all the entries in the User database
+"""
+@handler.register
+def allUsersDICT():
+    print("called allUsersDICT function")
+    users = session.query(User).all()
+    session.close()
+    retList = []
+    for user in users:
+        u = user.toDictionary()
+        retList.append(u)
+
+    return retList
 
 # OTHER FUNCTIONS
 

@@ -28,6 +28,15 @@ def wifi():
 def users():
     return app.send_static_file('users.html')
 
+# ENDPOINTS API
+@app.route("/api/users/", methods = ['GET'])
+def getUsersJSON():
+    try:
+        users = dbUser.allUsersDICT()
+    except:
+        users = []
+    return {"users": users}
+
 @app.route("/random")
 def index():
     return render_template("index.html")

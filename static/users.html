@@ -1,14 +1,50 @@
 <!DOCTYPE html>
 <head>
     <title>Tese - Utilizadores</title>
+
+    <!--Scripts para as tabelas-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css"  href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
+    
     <script>
+        function updateUsersTable() {
+            $.ajax({
+                url: '/api/users/',
+                type: "GET",
+                dataType: "json",
+                success: function(data){
+                    $('#usersTable > tbody:last-child').empty()
+                    data["users"].forEach( u => {
+                        $('#usersTable > tbody:last-child')
+                            .append('<tr> <td>' + u["id"] + '</td> <td>' + u["username"] + '</td> <td>' + u["password"] + '</td> </tr>');
+                    });
+                }
+            });
+        }
         $(document).ready(function() {
-            
+            updateUsersTable()
+
+            $("#buttonUpdateUsers").click(function(){
+                updateUsersTable()
+            });
         })
+
     </script>
 </head>
 <body>
     <h3>Listagem de Utilizadores</h3>
 
     <a href="/">Voltar à página inicial</a>
+
+    <button class="ui button" id="buttonUpdateUsers"> Atualizar Lista</button>
+
+    <table class="ui celled table selectable" id="usersTable" >
+        <thead>
+            <tr>
+                <th>ID</th> <th>Username</th> <th>Password</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </body>

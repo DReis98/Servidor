@@ -39,6 +39,10 @@ class GPSLog(Base):
     def __repr__(self):
         return "<id: %d, id_user: %s, data: %s, data_dia: %d, data_mes: %d, data_ano: %d, hora: %s, hora_hora: %d, hora_minuto: %d, hora_segundo: %d, lat: %f, lon: %f>" % (self.id, self.id_user, self.data, self.data_dia, self.data_mes, self.data_ano, self.hora, self.hora_hora, self.hora_minuto, self.hora_segundo, self.lat, self.lon)
 
+    def toDictionary(self):
+        return {"id:": self.id, "id_user": self.id_user, "data": self.data, "hora": self.hora, "lat": self.lat, "lon": self.lon}
+
+
 # CREATE TABLES FOR THE DATA MODELS
 Base.metadata.create_all(engine)
 
