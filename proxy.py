@@ -14,7 +14,19 @@ dbUser = client.ServerProxy("http://127.0.0.1:8002/apiUser")
 # ENDPOINTS
 @app.route("/")
 def main():
-    return "Hello World!"
+    return app.send_static_file('main_page.html')
+
+@app.route("/gps")
+def gps():
+    return app.send_static_file('logs_gps.html')
+
+@app.route("/wifi")
+def wifi():
+    return app.send_static_file('logs_wifi.html')
+
+@app.route("/users")
+def users():
+    return app.send_static_file('users.html')
 
 @app.route("/random")
 def index():
