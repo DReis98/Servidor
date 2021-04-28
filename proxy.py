@@ -28,6 +28,10 @@ def wifi():
 def users():
     return app.send_static_file('users.html')
 
+@app.route("/medical")
+def medical():
+    return app.send_static_file('medical.html')
+
 # ENDPOINTS API
 @app.route("/api/users/", methods = ['GET'])
 def getUsersJSON():
