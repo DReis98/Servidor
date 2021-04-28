@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <head>
     <title>Tese - Registos GPS</title>
+
+    <!--Scripts para as tabelas-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css"  href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
+
+
     <script>
+        function updateGPSLogsTable() {
+            $.ajax({
+                url: '/api/gpslog/',
+                type: "GET",
+                dataType: "json",
+                success: function(data){
+                    $('#gpsLogsTable > tbody:last-child').empty()
+                    data["gpss"].forEach( g => {
+                        $('#gpsLogsTable > tbody:last-child')
+                            .append('<tr> <td>' + g["id"] + '</td> <td>' + g["id_user"] + '</td> <td>' + g["data"] + '</td> <td>' + g["hora"] + '</td> <td>' + g["lat"] + '</td> <td>' + g["lon"] + '</td> </tr>');
+                    });
+                }
+            });
+        }
+
         $(document).ready(function() {
-            
+            updateGPSLogsTable()
         })
     </script>
 </head>
@@ -11,4 +32,16 @@
     <h3>Registos de GPS</h3>
 
     <a href="/">Voltar à página inicial</a>
+    <p></p>
+    <button class="ui button" id="buttonUpdateGPSLogs"> Atualizar Lista</button>
+
+    <table class="ui celled table selectable" id="gpsLogsTable" >
+        <thead>
+            <tr>
+                <th>ID</th> <th>ID_User</th> <th>Data</th> <th>Hora</th> <th>Latitude</th> <th>Longitude</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </body>

@@ -1,9 +1,28 @@
 <!DOCTYPE html>
 <head>
     <title>Tese - Registos WiFi</title>
+
+    <!--Scripts para as tabelas-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css"  href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
+
     <script>
+        function updateWifiLogsTable() {
+            $.ajax({
+                url: '/api/wifilog/',
+                type: "GET",
+                dataType: "json",
+                success: function(data){
+                    $('#wifiLogsTable > tbody:last-child').empty()
+                    data["wifis"].forEach( w => {
+                        $('#wifiLogsTable > tbody:last-child')
+                            .append('<tr> <td>' + w["id"] + '</td> <td>' + w["id_user"] + '</td> <td>' + w["data"] + '</td> <td>' + w["hora"] + '</td> <td>' + w["ssid"] + '</td> </tr>');
+                    });
+                }
+            });
+        }
         $(document).ready(function() {
-            
+            updateWifiLogsTable()
         })
     </script>
 </head>
@@ -11,4 +30,16 @@
     <h3>Registos de WiFi</h3>
 
     <a href="/">Voltar à página inicial</a>
+    <p></p>
+    <button class="ui button" id="buttonUpdateWifiLogs"> Atualizar Lista</button>
+
+    <table class="ui celled table selectable" id="wifiLogsTable" >
+        <thead>
+            <tr>
+                <th>ID</th> <th>ID_User</th> <th>Data</th> <th>Hora</th> <th>SSID</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </body>

@@ -37,6 +37,24 @@ def getUsersJSON():
         users = []
     return {"users": users}
 
+@app.route("/api/wifilog/", methods = ['GET'])
+def getWifiLogsJSON():
+    try:
+        wifis = dbWiFi.allWifiLogsDICT()
+    except:
+        wifis = []
+    return {"wifis": wifis}
+
+@app.route("/api/gpslog/", methods = ['GET'])
+def getGPSLogsJSON():
+    try:
+        gpss = dbGPS.allGPSLogsDICT()
+    except:
+        gpss = []
+    return {"gpss": gpss}
+
+#######
+
 @app.route("/random")
 def index():
     return render_template("index.html")
