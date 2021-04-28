@@ -23,6 +23,10 @@
         }
         $(document).ready(function() {
             updateWifiLogsTable()
+
+            $("#buttonUpdateWifiLogs").click(function(){
+                updateWifiLogsTable()
+            });
         })
     </script>
 </head>
