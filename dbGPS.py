@@ -35,12 +35,13 @@ class GPSLog(Base):
     hora_segundo = Column(Integer)
     lat = Column(Float)
     lon = Column(Float)
+    marked = Column(Integer)
 
     def __repr__(self):
-        return "<id: %d, id_user: %s, data: %s, data_dia: %d, data_mes: %d, data_ano: %d, hora: %s, hora_hora: %d, hora_minuto: %d, hora_segundo: %d, lat: %f, lon: %f>" % (self.id, self.id_user, self.data, self.data_dia, self.data_mes, self.data_ano, self.hora, self.hora_hora, self.hora_minuto, self.hora_segundo, self.lat, self.lon)
+        return "<id: %d, id_user: %s, data: %s, data_dia: %d, data_mes: %d, data_ano: %d, hora: %s, hora_hora: %d, hora_minuto: %d, hora_segundo: %d, lat: %f, lon: %f, marked: %d>" % (self.id, self.id_user, self.data, self.data_dia, self.data_mes, self.data_ano, self.hora, self.hora_hora, self.hora_minuto, self.hora_segundo, self.lat, self.lon, self.marked)
 
     def toDictionary(self):
-        return {"id": self.id, "id_user": self.id_user, "data": self.data, "hora": self.hora, "lat": self.lat, "lon": self.lon}
+        return {"id": self.id, "id_user": self.id_user, "data": self.data, "hora": self.hora, "lat": self.lat, "lon": self.lon, "marked": self.marked}
 
 
 # CREATE TABLES FOR THE DATA MODELS
@@ -74,7 +75,7 @@ def newGPSLog(id_user, data, hora, lat, lon):
     hora_minuto = int(h[1])
     hora_segundo = int(h[2])
 
-    newGPS = GPSLog(id_user = id_user, data = data, data_dia = data_dia, data_mes = data_mes, data_ano = data_ano, hora = hora, hora_hora = hora_hora, hora_minuto = hora_minuto, hora_segundo = hora_segundo, lat = lat, lon = lon)
+    newGPS = GPSLog(id_user = id_user, data = data, data_dia = data_dia, data_mes = data_mes, data_ano = data_ano, hora = hora, hora_hora = hora_hora, hora_minuto = hora_minuto, hora_segundo = hora_segundo, lat = lat, lon = lon, marked = 0)
     try:
         session.add(newGPS)
         session.commit()
