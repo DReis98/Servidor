@@ -1,12 +1,89 @@
 <!DOCTYPE html>
 <head>
     <title>Tese - Médicos</title>
+
+    <!--Scripts para as tabelas-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css"  href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
+
     <script>
+        function updateUsersTable() {
+            $.ajax({
+                url: '/api/users/',
+                type: "GET",
+                dataType: "json",
+                success: function(data){
+                    $('#usersTable > tbody:last-child').empty()
+                    data["users"].forEach( u => {
+                        $('#usersTable > tbody:last-child')
+                            .append('<tr> <td>' + u["id"] + '</td> <td>' + u["username"] + '</td> </tr>');
+                    });
+                }
+            });
+        }
+
+        function hideUsers() {
+            $("#buttonShowUsers").show();
+            $("#buttonHideUsers").hide();
+            $("#usersTable").hide();
+            $("#comeMainPageEnd").hide();
+        }
+
+        function showUsers() {
+            $("#buttonShowUsers").hide();
+            $("#buttonHideUsers").show();
+            updateUsersTable();
+            $("#usersTable").show();
+            $("#comeMainPageEnd").show();
+        }
+
+        function newInfected() {
+            var idText = $("#newInfectedText").val();
+            var id = parseInt(idText, 10);
+        }
+
+
         $(document).ready(function() {
-            
+            hideUsers();
+
+            $("#buttonShowUsers").click(function(){
+                showUsers();
+            });
+            $("#buttonHideUsers").click(function(){
+                hideUsers();
+            });
+            $("#buttonSubmitNewInfected").click(function(){
+                newInfected();
+            });
         })
+
     </script>
 </head>
 <body>
-    <h3>Página Ainda Vazia  :')</h3>
+    <h3>Página Dedicada a Profissionais de Saúde</h3>
+
+    <a href="/">Voltar à página inicial</a>
+    <p></p>
+    <button class="ui button" id="buttonShowUsers">Mostrar Utilizadores</button>
+    <button class="ui button" id="buttonHideUsers">Ocultar Utilizadores</button>
+
+    <table class="ui celled table selectable" id="usersTable" >
+        <thead>
+            <tr>
+                <th>ID</th> <th>Username</th> 
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <p></p>
+    <a id ="comeMainPageEnd" href="/">Voltar à página inicial</a>
+
+    <div id = "newInfected">
+        <h4>Inserir Utilizador Intefado</h4>
+        <div class="ui input">
+            <input type="text" placeholder="Escreva o ID do Utilizador" id="newInfectedText">
+        </div>
+        <button class="ui button" id="buttonSubmitNewInfected"> Submeter </button>
+    </div>
 </body>

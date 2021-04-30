@@ -16,7 +16,7 @@
                     $('#wifiLogsTable > tbody:last-child').empty()
                     data["wifis"].forEach( w => {
                         $('#wifiLogsTable > tbody:last-child')
-                            .append('<tr> <td>' + w["id"] + '</td> <td>' + w["id_user"] + '</td> <td>' + w["data"] + '</td> <td>' + w["hora"] + '</td> <td>' + w["ssid"] + '</td> </tr>');
+                            .append('<tr> <td>' + w["id"] + '</td> <td>' + w["id_user"] + '</td> <td>' + w["data"] + '</td> <td>' + w["hora"] + '</td> <td>' + w["ssid"] + '</td> <td>' + w["marked"] + '</td> </tr>');
                     });
                 }
             });
@@ -40,10 +40,12 @@
     <table class="ui celled table selectable" id="wifiLogsTable" >
         <thead>
             <tr>
-                <th>ID</th> <th>ID_User</th> <th>Data</th> <th>Hora</th> <th>SSID</th>
+                <th>ID</th> <th>ID_User</th> <th>Data</th> <th>Hora</th> <th>SSID</th> <th>Marcado</th>
             </tr>
         </thead>
         <tbody>
         </tbody>
     </table>
+    <p></p>
+    <a href="/">Voltar à página inicial</a>
 </body>

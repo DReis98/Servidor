@@ -17,7 +17,7 @@
                     $('#gpsLogsTable > tbody:last-child').empty()
                     data["gpss"].forEach( g => {
                         $('#gpsLogsTable > tbody:last-child')
-                            .append('<tr> <td>' + g["id"] + '</td> <td>' + g["id_user"] + '</td> <td>' + g["data"] + '</td> <td>' + g["hora"] + '</td> <td>' + g["lat"] + '</td> <td>' + g["lon"] + '</td> </tr>');
+                            .append('<tr> <td>' + g["id"] + '</td> <td>' + g["id_user"] + '</td> <td>' + g["data"] + '</td> <td>' + g["hora"] + '</td> <td>' + g["lat"] + '</td> <td>' + g["lon"] + '</td> <td>' + g["marked"] + '</td> </tr>');
                     });
                 }
             });
@@ -42,10 +42,12 @@
     <table class="ui celled table selectable" id="gpsLogsTable" >
         <thead>
             <tr>
-                <th>ID</th> <th>ID_User</th> <th>Data</th> <th>Hora</th> <th>Latitude</th> <th>Longitude</th>
+                <th>ID</th> <th>ID_User</th> <th>Data</th> <th>Hora</th> <th>Latitude</th> <th>Longitude</th> <th>Marcado</th>
             </tr>
         </thead>
         <tbody>
         </tbody>
     </table>
+    <p></p>
+    <a href="/">Voltar à página inicial</a>
 </body>
