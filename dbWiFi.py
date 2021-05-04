@@ -24,7 +24,7 @@ Base = declarative_base()
 class WiFiLog(Base):
     __tablename__ = 'wifilog'
     id = Column(Integer, primary_key = True)
-    id_user = Column(String)
+    id_user = Column(Integer)
     data = Column(String)
     data_dia = Column(Integer)
     data_mes = Column(Integer)
@@ -37,7 +37,7 @@ class WiFiLog(Base):
     marked = Column(Integer)
 
     def __repr__(self):
-        return "<id: %d, id_user: %s, data: %s, data_dia: %d, data_mes: %d, data_ano: %d, hora: %s, hora_hora: %d, hora_minuto: %d, hora_segundo: %d, ssid: %s, marked: %d>" % (self.id, self.id_user, self.data, self.data_dia, self.data_mes, self.data_ano, self.hora, self.hora_hora, self.hora_minuto, self.hora_segundo, self.ssid, self.marked)
+        return "<id: %d, id_user: %d, data: %s, data_dia: %d, data_mes: %d, data_ano: %d, hora: %s, hora_hora: %d, hora_minuto: %d, hora_segundo: %d, ssid: %s, marked: %d>" % (self.id, self.id_user, self.data, self.data_dia, self.data_mes, self.data_ano, self.hora, self.hora_hora, self.hora_minuto, self.hora_segundo, self.ssid, self.marked)
 
     def toDictionary(self):
         return {"id": self.id, "id_user": self.id_user, "data": self.data, "hora": self.hora, "ssid": self.ssid, "marked": self.marked}

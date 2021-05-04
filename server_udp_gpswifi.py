@@ -21,6 +21,7 @@ print("UDP server up and listening")
 # CONNECTION TO DATABASES
 dbGPS = client.ServerProxy("http://127.0.0.1:8000/apiGPSLog")
 dbWiFi = client.ServerProxy("http://127.0.0.1:8001/apiWiFiLog")
+dbUser = client.ServerProxy("http://127.0.0.1:8002/apiUser")
 
 while(True):
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
@@ -35,15 +36,20 @@ while(True):
 
     message = message.split()
 
-    
+    # username em message[1]
     print(message)
     
+    id_user = dbUser.getIdUser(message[1])
+
+    if id_user == 0:
+        print("Continued")
+        continue
 
     if message[0] == "GPS":
-        number = dbGPS.newGPSLog(message[1], message[2], message[3], float(message[4]), float(message[5]))
+        number = dbGPS.newGPSLog(id_user, message[2], message[3], float(message[4]), float(message[5]))
         print(number)
         print("")
     elif message[0] == "WiFi":
-        number = dbWiFi.newWiFiLog(message[1], message[2], message[3], message[4])
+        number = dbWiFi.newWiFiLog(id_user, message[2], message[3], message[4])
         print(number)
         print("")

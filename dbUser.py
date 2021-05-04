@@ -97,6 +97,23 @@ def checkUserPassword(username, password):
     return count
 
 """
+Looks if there is a certain username in the database
+Returns the number of entries with that specific username. Must be 0 or 1
+"""
+@handler.register
+def getIdUser(username):
+    print("called getIdUser function")
+    users = session.query(User).filter(User.username == username).first()
+    id_user = 0
+    try:
+        id_user = users.id
+    except:
+        id_user = 0
+        print("Except")
+    session.close()
+    return id_user
+
+"""
 Returns all the entries in the User database
 """
 @handler.register
