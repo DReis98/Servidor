@@ -40,6 +40,38 @@
         function newInfected() {
             var idText = $("#newInfectedText").val();
             var id = parseInt(idText, 10);
+
+            var Diainicio = document.getElementById("diaInicio").value;
+            var Mesinicio = document.getElementById("mesInicio").value;
+            var Anoinicio = document.getElementById("anoInicio").value;
+
+            var diainicio = parseInt(Diainicio, 10);
+            var mesinicio = parseInt(Mesinicio, 10);
+            var anoinicio = parseInt(Anoinicio, 10);
+
+            var Diafim = document.getElementById("diaFim").value;
+            var Mesfim = document.getElementById("mesFim").value;
+            var Anofim = document.getElementById("anoFim").value;
+
+            var diafim = parseInt(Diafim, 10);
+            var mesfim = parseInt(Mesfim, 10);
+            var anofim = parseInt(Anofim, 10);
+
+            let requestData = {"dia_inicio": diainicio, "mes_inicio": mesinicio, "ano_inicio": anoinicio, "dia_fim": diafim, "mes_fim": mesfim, "ano_fim": anofim};
+
+            if(id > 0) {
+                $.ajax({
+                    url: '/api/users/' + id + '/marked/',
+                    type: "UPDATE",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    data: JSON.stringify(requestData),
+                    success: function(data) {
+                        console.log(data["check"])
+                    }
+                });
+            }
+
         }
 
 
@@ -84,6 +116,122 @@
         <div class="ui input">
             <input type="text" placeholder="Escreva o ID do Utilizador" id="newInfectedText">
         </div>
+        <p>
+        </p>
+        <div class="dataInicio">
+            Data de Início
+            <p></p>
+            <select id="diaInicio">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+            </select>
+            <select id="mesInicio">
+                <option value="1">janeiro</option>
+                <option value="2">fevereiro</option>
+                <option value="3">março</option>
+                <option value="4">abril</option>
+                <option value="5">maio</option>
+                <option value="6">junho</option>
+                <option value="7">julho</option>
+                <option value="8">agosto</option>
+                <option value="9">setembro</option>
+                <option value="10">outubro</option>
+                <option value="11">novembro</option>
+                <option value="12">dezembro</option>
+            </select>
+            <select id="anoInicio">
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+            </select>
+        </div>
+        <p></p>
+        <div class="dataFim">
+            Data de Fim  
+            <p></p>
+            <select id="diaFim">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+            </select>
+            <select id="mesFim">
+                <option value="1">janeiro</option>
+                <option value="2">fevereiro</option>
+                <option value="3">março</option>
+                <option value="4">abril</option>
+                <option value="5">maio</option>
+                <option value="6">junho</option>
+                <option value="7">julho</option>
+                <option value="8">agosto</option>
+                <option value="9">setembro</option>
+                <option value="10">outubro</option>
+                <option value="11">novembro</option>
+                <option value="12">dezembro</option>
+            </select>
+            <select id="anoFim">
+                <option value="2019">2019</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+            </select>
+        </div>
+        <p></p>
         <button class="ui button" id="buttonSubmitNewInfected"> Submeter </button>
     </div>
 </body>

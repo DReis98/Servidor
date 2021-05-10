@@ -1,6 +1,6 @@
 import xmlrpc.server
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 from xmlrpc import client
 
@@ -40,6 +40,16 @@ def getUsersJSON():
     except:
         users = []
     return {"users": users}
+
+@app.route("/api/users/<int:idUser>/marked/", methods = ['UPDATE'])
+def updateUsersMarkedJSON(idUser):
+    print("Called updateUsersMarkedJSON")
+    print(idUser)
+    j = request.get_json()
+    print("Data inicio {}/{}/{} : Data Fim {}/{}/{}".format(j["dia_inicio"], j["mes_inicio"], j["ano_inicio"], j["dia_fim"], j["mes_fim"], j["ano_fim"]))
+    print(type(j["mes_inicio"]))
+    ret = "OK"
+    return {"check":ret}
 
 @app.route("/api/wifilog/", methods = ['GET'])
 def getWifiLogsJSON():
