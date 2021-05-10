@@ -1,11 +1,14 @@
 from flask import *
 from flaskXMLRPC import XMLRPCHandler
 
+from dates import *
+
 from os import path
 
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy import ForeignKey
+from sqlalchemy import and_
 from sqlalchemy.orm import relationship, scoped_session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -101,6 +104,29 @@ def allWifiLogsDICT():
         retList.append(w)
 
     return retList
+
+"""
+Change marked column
+"""
+@handler.register
+def changeMarked(id, date1, date2):
+    print("called changeMarked function")
+    date = date1
+    compDates = compareDates(date1, date2)
+    
+    while compDates == 1:
+        try:
+            wifis = session.query(WiFiLog).filter(and_(WiFiLog.id_user == id, WiFiLog.data_mes == date["month"], WiFiLog.data_dia == date["day"], WiFiLog.data_ano == date["year"])).all()
+            for wifi in wifis:
+                wifi.marked = 1
+            session.commit()
+            print("Changed successfully") 
+            session.close()   
+        except:
+            print("Failed changing wifilog marked")
+        
+        date = nextDay(date)
+        compDates = compareDates(date, date2)
 
 # OTHER FUNCTIONS
 

@@ -1,5 +1,7 @@
 import xmlrpc.server
 
+from dates import *
+
 from flask import Flask, render_template, request
 
 from xmlrpc import client
@@ -44,10 +46,20 @@ def getUsersJSON():
 @app.route("/api/users/<int:idUser>/marked/", methods = ['UPDATE'])
 def updateUsersMarkedJSON(idUser):
     print("Called updateUsersMarkedJSON")
-    print(idUser)
     j = request.get_json()
-    print("Data inicio {}/{}/{} : Data Fim {}/{}/{}".format(j["dia_inicio"], j["mes_inicio"], j["ano_inicio"], j["dia_fim"], j["mes_fim"], j["ano_fim"]))
-    print(type(j["mes_inicio"]))
+    date1 = {}
+    date2 = {}
+    try:
+        date1["day"] = j["dia_inicio"]
+        date1["month"] = j["mes_inicio"]
+        date1["year"] = j["ano_inicio"]
+        date2["day"] = j["dia_fim"]
+        date2["month"] = j["mes_fim"]
+        date2["year"] = j["ano_fim"]
+        dbGPS.changeMarked(idUser, date1, date2)
+        dbWiFi.changeMarked(idUser, date1, date2)
+    except:
+        print("Failed changing Marked")
     ret = "OK"
     return {"check":ret}
 

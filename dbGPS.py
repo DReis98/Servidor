@@ -1,11 +1,14 @@
 from flask import *
 from flaskXMLRPC import XMLRPCHandler
 
+from dates import *
+
 from os import path
 
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy import ForeignKey
+from sqlalchemy import and_
 from sqlalchemy.orm import relationship, scoped_session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -103,6 +106,29 @@ def allGPSLogsDICT():
         retList.append(g)
 
     return retList
+
+"""
+Change marked column
+"""
+@handler.register
+def changeMarked(id, date1, date2):
+    print("called changeMarked function")
+    date = date1
+    compDates = compareDates(date1, date2)
+    
+    while compDates == 1:
+        try:
+            gpss = session.query(GPSLog).filter(and_(GPSLog.id_user == id, GPSLog.data_mes == date["month"], GPSLog.data_dia == date["day"], GPSLog.data_ano == date["year"])).all()
+            for gps in gpss:
+                gps.marked = 1
+            session.commit()
+            print("Changed successfully") 
+            session.close()   
+        except:
+            print("Failed changing gpslog marked")
+        
+        date = nextDay(date)
+        compDates = compareDates(date, date2)
 
 # OTHER FUNCTIONS
 
