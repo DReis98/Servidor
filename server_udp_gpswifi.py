@@ -34,22 +34,23 @@ while(True):
         UDPServerSocket.close()
         break
 
-    message = message.split()
+    message_s = message.split()
 
     # username em message[1]
-    print(message)
+    print(message_s)
     
-    id_user = dbUser.getIdUser(message[1])
+    id_user = dbUser.getIdUser(message_s[1])
 
     if id_user == 0:
         print("Continued")
         continue
 
-    if message[0] == "GPS":
-        number = dbGPS.newGPSLog(id_user, message[2], message[3], float(message[4]), float(message[5]))
+    if message_s[0] == "GPS":
+        number = dbGPS.newGPSLog(id_user, message_s[2], message_s[3], float(message_s[4]), float(message_s[5]))
         print(number)
         print("")
-    elif message[0] == "WiFi":
-        number = dbWiFi.newWiFiLog(id_user, message[2], message[3], message[4])
+    elif message_s[0] == "WiFi":
+        msg = message.split(sep = " ", maxsplit = 4)
+        number = dbWiFi.newWiFiLog(id_user, message_s[2], message_s[3], msg[4])
         print(number)
         print("")
