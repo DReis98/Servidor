@@ -34,6 +34,23 @@ class User(Base):
     def toDictionary(self):
         return {"id": self.id, "username": self.username, "password": self.password}
 
+class UserInfected(Base):
+    __tablename__ = 'userinfected'
+    id = Column(Integer, primary_key = True)
+    id_user = Column(Integer)
+    dia_inicio = Column(Integer)
+    mes_inicio = Column(Integer)
+    ano_inicio = Column(Integer)
+    dia_fim = Column(Integer)
+    mes_fim = Column(Integer)
+    ano_fim = Column(Integer)
+
+    def __repr__(self):
+        return "<id: %d, id_user: %d, data inicio: %d/%d/%d, data fim: %d/%d/%d>" % (self.id, self.id_user, self.dia_inicio, self.mes_inicio, self.ano_inicio, self.dia_fim, self.mes_fim, self.ano_fim)
+
+    def toDictionary(self):
+        return {"id": self.id, "id_user": self.id_user, "dia_inicio": self.dia_inicio, "mes_inicio": self.mes_inicio, "ano_inicio": self.ano_inicio, "dia_fim": self.dia_fim, "mes_fim": self.mes_fim, "ano_fim": self.ano_fim}
+
 # CREATE TABLES FOR THE DATA MODELS
 Base.metadata.create_all(engine)
 
@@ -45,6 +62,29 @@ handler = XMLRPCHandler('apiUser')
 handler.connect(app, '/apiUser')
 
 # HANDLER FUNCTIONS
+
+"""
+Creates a new entry in UserInfected database.
+Receives the parameters and returns the sequential id. In case of error, returns 0.
+"""
+@handler.register
+def newUserInfected(id_user, dia_inicio, mes_inicio, ano_inicio, dia_fim, mes_fim, ano_fim):
+    number = 0
+    print("here 1")
+    new = UserInfected(id_user = id_user, dia_inicio = dia_inicio, mes_inicio = mes_inicio, ano_inicio = ano_inicio, dia_fim = dia_fim, mes_fim = mes_fim, ano_fim = ano_fim)
+    print("here 2")
+    try:
+        session.add(new)
+        session.commit()
+        number = new.id
+        print("Added successfully") 
+        print(new.__repr__())
+        print()
+        session.close()
+    except:
+        print("Failed adding userinfected")
+
+    return number
 
 """
 Creates a new entry in User database.
@@ -123,6 +163,21 @@ def allUsersDICT():
     session.close()
     retList = []
     for user in users:
+        u = user.toDictionary()
+        retList.append(u)
+
+    return retList
+
+"""
+Returns all the entries in the UserInfected database
+"""
+@handler.register
+def allUsersInfectedDICT():
+    print("called allUsersInfectedDICT function")
+    usersinfected = session.query(UserInfected).all()
+    session.close()
+    retList = []
+    for user in usersinfected:
         u = user.toDictionary()
         retList.append(u)
 

@@ -21,11 +21,30 @@
                 }
             });
         }
-        $(document).ready(function() {
-            updateUsersTable()
 
+        function updateUsersInfectedTable() {
+            $.ajax({
+                url: '/api/usersinfected/',
+                type: "GET",
+                dataType: "json",
+                success: function(data){
+                    $('#usersInfectedTable > tbody:last-child').empty()
+                    data["usersinfected"].forEach( u => {
+                        $('#usersInfectedTable > tbody:last-child')
+                            .append('<tr> <td>' + u["id"] + '</td> <td>' + u["id_user"] + '</td> <td>' + u["dia_inicio"] + '/' + u["mes_inicio"] + '/'  + u["ano_inicio"] + '</td> <td>' + u["dia_fim"] + '/'  + u["mes_fim"] + '/'  + u["ano_fim"] + '</td> </tr>');
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            updateUsersTable();
+            
             $("#buttonUpdateUsers").click(function(){
                 updateUsersTable()
+            });
+            $("#buttonUpdateUsersInfected").click(function(){
+                updateUsersInfectedTable()
             });
         })
 
@@ -36,12 +55,24 @@
 
     <a href="/">Voltar à página inicial</a>
     <p></p>
-    <button class="ui button" id="buttonUpdateUsers"> Atualizar Lista</button>
+    <button class="ui button" id="buttonUpdateUsers"> Atualizar Lista de Utilizadores</button>
 
     <table class="ui celled table selectable" id="usersTable" >
         <thead>
             <tr>
                 <th>ID</th> <th>Username</th> <th>Password</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <p></p>
+    <button class="ui button" id="buttonUpdateUsersInfected"> Atualizar Lista de Utilizadores Infetados</button>
+
+    <table class="ui celled table selectable" id="usersInfectedTable" >
+        <thead>
+            <tr>
+                <th>ID</th> <th>ID_User</th> <th>Data Inicio</th> <th>Data Fim</th>
             </tr>
         </thead>
         <tbody>

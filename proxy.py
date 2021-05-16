@@ -43,6 +43,14 @@ def getUsersJSON():
         users = []
     return {"users": users}
 
+@app.route("/api/usersinfected/", methods = ['GET'])
+def getUsersInfectedJSON():
+    try:
+        usersinfected = dbUser.allUsersInfectedDICT()
+    except:
+        usersinfected = []
+    return {"usersinfected": usersinfected}
+
 @app.route("/api/users/<int:idUser>/marked/", methods = ['UPDATE'])
 def updateUsersMarkedJSON(idUser):
     print("Called updateUsersMarkedJSON")
@@ -57,9 +65,15 @@ def updateUsersMarkedJSON(idUser):
         date2["month"] = j["mes_fim"]
         date2["year"] = j["ano_fim"]
         dbGPS.changeMarked(idUser, date1, date2)
-        dbWiFi.changeMarked(idUser, date1, date2)
+        dbWiFi.changeMarked(idUser, date1, date2)   
     except:
         print("Failed changing Marked")
+
+    try:
+        dbUser.newUserInfected(idUser, j["dia_inicio"], j["mes_inicio"], j["ano_inicio"], j["dia_fim"], j["mes_fim"], j["ano_fim"])
+    except:
+        print("Failed new user infected")
+        
     ret = "OK"
     return {"check":ret}
 
