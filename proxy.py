@@ -37,23 +37,34 @@ def medical():
 # ENDPOINTS API
 @app.route("/api/users/", methods = ['GET'])
 def getUsersJSON():
+    print("called getUsersJSON function")
+
     try:
         users = dbUser.allUsersDICT()
+        print("success on getUsersJSON")
     except:
         users = []
+        print("failure on getUsersJSON")
+
     return {"users": users}
 
 @app.route("/api/usersinfected/", methods = ['GET'])
 def getUsersInfectedJSON():
+    print("called getUsersInfectedJSON function")
+
     try:
         usersinfected = dbUser.allUsersInfectedDICT()
+        print("success om getUsersInfectedJSON")
     except:
         usersinfected = []
+        print("failure on getUsersInfectedJSON")
+
     return {"usersinfected": usersinfected}
 
 @app.route("/api/users/<int:idUser>/marked/", methods = ['UPDATE'])
 def updateUsersMarkedJSON(idUser):
-    print("Called updateUsersMarkedJSON")
+    print("called updateUsersMarkedJSON function")
+
     j = request.get_json()
     date1 = {}
     date2 = {}
@@ -64,33 +75,55 @@ def updateUsersMarkedJSON(idUser):
         date2["day"] = j["dia_fim"]
         date2["month"] = j["mes_fim"]
         date2["year"] = j["ano_fim"]
-        dbGPS.changeMarked(idUser, date1, date2)
-        dbWiFi.changeMarked(idUser, date1, date2)   
+        print("success on transformation dates to dicts")
     except:
-        print("Failed changing Marked")
+        print("failure on transformation dates to dicts")
+
+    try:
+        dbGPS.changeMarked(idUser, date1, date2)
+        print("success on marking gps logs")
+    except:
+        print("failure on marking gps logs")
+
+    try:
+        dbWiFi.changeMarked(idUser, date1, date2)
+        print("success on marking wifi logs")
+    except:
+        print("failure on marking wifi logs")
 
     try:
         dbUser.newUserInfected(idUser, j["dia_inicio"], j["mes_inicio"], j["ano_inicio"], j["dia_fim"], j["mes_fim"], j["ano_fim"])
+        print("success on creating new infected user")
     except:
-        print("Failed new user infected")
+        print("failure on creating new infected user")
         
     ret = "OK"
-    return {"check":ret}
+    return {"check": ret}
 
 @app.route("/api/wifilog/", methods = ['GET'])
 def getWifiLogsJSON():
+    print("called getWifiLogsJSON function")
+
     try:
         wifis = dbWiFi.allWifiLogsDICT()
+        print("success on getWifiLogsJSON")
     except:
         wifis = []
+        print("failure on getWifiLogsJSON")
+    
     return {"wifis": wifis}
 
 @app.route("/api/gpslog/", methods = ['GET'])
 def getGPSLogsJSON():
+    print("called getGPSLogsJSON function")
+
     try:
         gpss = dbGPS.allGPSLogsDICT()
+        print("success on getGPSLogsJSON")
     except:
         gpss = []
+        print("success on getGPSLogsJSON")
+    
     return {"gpss": gpss}
 
 #######
