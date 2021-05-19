@@ -63,30 +63,33 @@ Receives the parameters and returns the sequential id. In case of error, returns
 """
 @handler.register
 def newWiFiLog(id_user, data, hora, ssid):
+    print("called newWiFiLog function")
     number = 0
 
     # data e hora
-    d = data.split("-")
-    data_dia = int(d[0])
-    data_mes = int(d[1])
-    data_ano = int(d[2])
-
-    h = hora.split(":")
-    hora_hora = int(h[0])
-    hora_minuto = int(h[1])
-    hora_segundo = int(h[2])
-
-    newWiFi = WiFiLog(id_user = id_user, data = data, data_dia = data_dia, data_mes = data_mes, data_ano = data_ano, hora = hora, hora_hora = hora_hora, hora_minuto = hora_minuto, hora_segundo = hora_segundo, ssid = ssid, marked = 0)
     try:
+        d = data.split("-")
+        data_dia = int(d[0])
+        data_mes = int(d[1])
+        data_ano = int(d[2])
+
+        h = hora.split(":")
+        hora_hora = int(h[0])
+        hora_minuto = int(h[1])
+        hora_segundo = int(h[2])
+        print("success on get date and time from dict")
+    except:
+        print("failure on get date and time from dict")
+
+    try:
+        newWiFi = WiFiLog(id_user = id_user, data = data, data_dia = data_dia, data_mes = data_mes, data_ano = data_ano, hora = hora, hora_hora = hora_hora, hora_minuto = hora_minuto, hora_segundo = hora_segundo, ssid = ssid, marked = 0)
         session.add(newWiFi)
         session.commit()
         number = newWiFi.id
-        print("Added successfully") 
-        print(newWiFi.__repr__())
-        print()
         session.close()
+        print("success on newWiFiLog")
     except:
-        print("Failed adding wifi log")
+        print("failure on newWiFiLog")
 
     return number
 
@@ -96,12 +99,19 @@ Returns all the entries in the WiFiLog database
 @handler.register
 def allWifiLogsDICT():
     print("called allWifiLogsDICT function")
-    wifis = session.query(WiFiLog).all()
-    session.close()
+
     retList = []
-    for wifi in wifis:
-        w = wifi.toDictionary()
-        retList.append(w)
+
+    try:
+        wifis = session.query(WiFiLog).all()
+        session.close()
+        
+        for wifi in wifis:
+            w = wifi.toDictionary()
+            retList.append(w)
+        print("success on allWiFiLogsDICT")
+    except:
+        print("failure on allWiFiLogsDICT")
 
     return retList
 
@@ -111,6 +121,7 @@ Change marked column
 @handler.register
 def changeMarked(id, date1, date2):
     print("called changeMarked function")
+
     date = date1
     compDates = compareDates(date1, date2)
     
@@ -120,10 +131,10 @@ def changeMarked(id, date1, date2):
             for wifi in wifis:
                 wifi.marked = 1
             session.commit()
-            print("Changed successfully") 
+            print("success on changeMarked") 
             session.close()   
         except:
-            print("Failed changing wifilog marked")
+            print("failure on changeMarked")
         
         date = nextDay(date)
         compDates = compareDates(date, date2)

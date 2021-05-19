@@ -65,30 +65,35 @@ Receives the parameters and returns the sequential id. In case of error, returns
 """
 @handler.register
 def newGPSLog(id_user, data, hora, lat, lon):
+    print("called newGPSLog function")
+
     number = 0
 
     # data e hora 
-    d = data.split("-")
-    data_dia = int(d[0])
-    data_mes = int(d[1])
-    data_ano = int(d[2])
-
-    h = hora.split(":")
-    hora_hora = int(h[0])
-    hora_minuto = int(h[1])
-    hora_segundo = int(h[2])
-
-    newGPS = GPSLog(id_user = id_user, data = data, data_dia = data_dia, data_mes = data_mes, data_ano = data_ano, hora = hora, hora_hora = hora_hora, hora_minuto = hora_minuto, hora_segundo = hora_segundo, lat = lat, lon = lon, marked = 0)
     try:
+        d = data.split("-")
+        data_dia = int(d[0])
+        data_mes = int(d[1])
+        data_ano = int(d[2])
+
+        h = hora.split(":")
+        hora_hora = int(h[0])
+        hora_minuto = int(h[1])
+        hora_segundo = int(h[2])
+
+        print("success on get date and time from dict")
+    except:
+        print("failure on get date and time from dict")
+
+    try:
+        newGPS = GPSLog(id_user = id_user, data = data, data_dia = data_dia, data_mes = data_mes, data_ano = data_ano, hora = hora, hora_hora = hora_hora, hora_minuto = hora_minuto, hora_segundo = hora_segundo, lat = lat, lon = lon, marked = 0)
         session.add(newGPS)
         session.commit()
         number = newGPS.id
-        print("Added successfully") 
-        print(newGPS.__repr__())
-        print()
-        session.close()   
+        session.close()  
+        print("success on newGPSLog")  
     except:
-        print("Failed adding gps log")
+        print("failure on newGPSLog")  
 
     return number
 
@@ -98,12 +103,17 @@ Returns all the entries in the WiFiLog database
 @handler.register
 def allGPSLogsDICT():
     print("called allGPSLogsDICT function")
-    gpss = session.query(GPSLog).all()
-    session.close()
-    retList = []
-    for gps in gpss:
-        g = gps.toDictionary()
-        retList.append(g)
+
+    try:
+        gpss = session.query(GPSLog).all()
+        session.close()
+        retList = []
+        for gps in gpss:
+            g = gps.toDictionary()
+            retList.append(g)
+        print("success on allGPSLogsDICT")
+    except:
+        print("failure on allGPSLogsDICT")
 
     return retList
 
@@ -113,6 +123,7 @@ Change marked column
 @handler.register
 def changeMarked(id, date1, date2):
     print("called changeMarked function")
+
     date = date1
     compDates = compareDates(date1, date2)
     
@@ -122,10 +133,10 @@ def changeMarked(id, date1, date2):
             for gps in gpss:
                 gps.marked = 1
             session.commit()
-            print("Changed successfully") 
             session.close()   
+            print("success on changeMarked") 
         except:
-            print("Failed changing gpslog marked")
+            print("failure on changeMarked") 
         
         date = nextDay(date)
         compDates = compareDates(date, date2)

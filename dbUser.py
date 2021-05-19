@@ -69,20 +69,19 @@ Receives the parameters and returns the sequential id. In case of error, returns
 """
 @handler.register
 def newUserInfected(id_user, dia_inicio, mes_inicio, ano_inicio, dia_fim, mes_fim, ano_fim):
+    print("called newUserInfected function")
+
     number = 0
-    print("here 1")
-    new = UserInfected(id_user = id_user, dia_inicio = dia_inicio, mes_inicio = mes_inicio, ano_inicio = ano_inicio, dia_fim = dia_fim, mes_fim = mes_fim, ano_fim = ano_fim)
-    print("here 2")
+
     try:
+        new = UserInfected(id_user = id_user, dia_inicio = dia_inicio, mes_inicio = mes_inicio, ano_inicio = ano_inicio, dia_fim = dia_fim, mes_fim = mes_fim, ano_fim = ano_fim)
         session.add(new)
         session.commit()
         number = new.id
-        print("Added successfully") 
-        print(new.__repr__())
-        print()
         session.close()
+        print("success on newUserInfected")
     except:
-        print("Failed adding userinfected")
+        print("failure on newUserInfected")
 
     return number
 
@@ -92,19 +91,18 @@ Receives the parameters and returns the sequential id. In case of error, returns
 """
 @handler.register
 def newUser(username, password):
+    print("called newUser function")
     number = 0
 
-    newUser = User(username = username, password = password)
     try:
+        newUser = User(username = username, password = password)
         session.add(newUser)
         session.commit()
         number = newUser.id
-        print("Added successfully") 
-        print(newUser.__repr__())
-        print()
         session.close()
+        print("success on newUser")
     except:
-        print("Failed adding user")
+        print("failure on newUser")
 
     return number
 
@@ -115,11 +113,17 @@ Returns the number of entries with that specific username. Must be 0 or 1
 @handler.register
 def checkUserExists(username):
     print("called checkUserExists function")
-    users = session.query(User).filter(User.username == username).all()
-    session.close()
     count = 0
-    for user in users:
-        count = count + 1
+
+    try:
+        users = session.query(User).filter(User.username == username).all()
+        session.close()
+        for _ in users:
+            count = count + 1
+        print("success on checkUserExists")
+    except:
+        print("failure on checkUserExists")
+
     return count
 
 """
@@ -129,11 +133,19 @@ Returns the number of entries with that specific username and password. Must be 
 @handler.register
 def checkUserPassword(username, password):
     print("called checkUserPassword function")
-    users = session.query(User).filter(and_(User.username == username, User.password == password)).all()
-    session.close()
+
     count = 0
-    for user in users:
-        count = count + 1
+
+    try:
+        users = session.query(User).filter(and_(User.username == username, User.password == password)).all()
+        session.close()
+        
+        for _ in users:
+            count = count + 1
+        print("success on checkUserPassword")
+    except:
+        print("failure on checkUserPassword")
+
     return count
 
 """
@@ -143,14 +155,17 @@ Returns the number of entries with that specific username. Must be 0 or 1
 @handler.register
 def getIdUser(username):
     print("called getIdUser function")
-    users = session.query(User).filter(User.username == username).first()
+    
     id_user = 0
+
     try:
+        users = session.query(User).filter(User.username == username).first()
         id_user = users.id
+        session.close()
+        print("succezs on getIdUser")
     except:
-        id_user = 0
-        print("Except")
-    session.close()
+        print("failure on getIdUser")
+    
     return id_user
 
 """
@@ -159,12 +174,17 @@ Returns all the entries in the User database
 @handler.register
 def allUsersDICT():
     print("called allUsersDICT function")
-    users = session.query(User).all()
-    session.close()
-    retList = []
-    for user in users:
-        u = user.toDictionary()
-        retList.append(u)
+
+    try:
+        users = session.query(User).all()
+        session.close()
+        retList = []
+        for user in users:
+            u = user.toDictionary()
+            retList.append(u)
+        print("success on allUsersDICT")
+    except:
+        print("failure on allUsersDICT")
 
     return retList
 
@@ -174,12 +194,17 @@ Returns all the entries in the UserInfected database
 @handler.register
 def allUsersInfectedDICT():
     print("called allUsersInfectedDICT function")
-    usersinfected = session.query(UserInfected).all()
-    session.close()
-    retList = []
-    for user in usersinfected:
-        u = user.toDictionary()
-        retList.append(u)
+
+    try:
+        usersinfected = session.query(UserInfected).all()
+        session.close()
+        retList = []
+        for user in usersinfected:
+            u = user.toDictionary()
+            retList.append(u)
+        print("success on allUsersInfectedDICT")
+    except:
+        print("failure on allUsersInfectedDICT")
 
     return retList
 
