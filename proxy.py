@@ -34,6 +34,14 @@ def users():
 def medical():
     return app.send_static_file('medical.html')
 
+@app.route("/map")
+def map():
+    return app.send_static_file('map.html')
+
+@app.route("/googleef86e8bbc6c2f64d.html")
+def cenas():
+    return app.send_static_file('googleef86e8bbc6c2f64d.html')
+
 # ENDPOINTS API
 @app.route("/api/users/", methods = ['GET'])
 def getUsersJSON():
