@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<head>
+    <title>Tese - Estatísticas WiFi</title>
+
+    <!--Scripts para as tabelas-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css"  href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
+
+
+    <script>
+        function updateWifiLogsTable() {
+            $.ajax({
+                url: '/api/wifilog/marked/',
+                type: "GET",
+                dataType: "json",
+                success: function(data){
+                    $('#wifiLogsTable > tbody:last-child').empty()
+                    data["wifis"].forEach( w => {
+                        $('#wifiLogsTable > tbody:last-child')
+                            .append('<tr> <td>' + w[0] + '</td> <td>' + w[1] + '</td> <td>' + w[2] + '</td> <td>' + w[3] + '</td> </tr>');
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            updateWifiLogsTable()
+
+            $("#buttonUpdateWifiLogs").click(function(){
+                updateWifiLogsTable()
+            });
+        })
+    </script>
+</head>
+<body>
+    <h3>Estatísticas de WiFi</h3>
+
+    <a href="/">Voltar à página inicial</a>
+    <p></p>
+    <button class="ui button" id="buttonUpdateWifiLogs"> Atualizar Lista</button>
+
+    <table class="ui celled table selectable" id="wifiLogsTable" >
+        <thead>
+            <tr>
+                <th>SSID</th> <th>Marked</th> <th>Non-Marked</th> <th></th> 
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <p></p>
+    <a href="/">Voltar à página inicial</a>
+</body>

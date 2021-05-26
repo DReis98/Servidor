@@ -116,6 +116,56 @@ def allWifiLogsDICT():
     return retList
 
 """
+Returns all the marked entries in the WiFiLog database
+"""
+@handler.register
+def wifiLogsMarked():
+    print("called wifiLogsMarked function")
+
+    retList = []
+    
+    try:
+        marked = session.query(WiFiLog).filter(WiFiLog.marked == 1).all()
+        session.close()
+        
+        
+        for mark in marked:
+            m = mark.toDictionary()
+            retList.append(m)
+
+        print("success on get marked wifilogs")
+
+    except:
+        print("failure on get marked wifilogs")
+    
+    return retList
+
+"""
+Returns all the non-marked entries in the WiFiLog database
+"""
+@handler.register
+def wifiLogsNonMarked():
+    print("called wifiLogsNonMarked function")
+
+    retList = []
+    
+    try:
+        marked = session.query(WiFiLog).filter(WiFiLog.marked == 0).all()
+        session.close()
+        
+        
+        for mark in marked:
+            m = mark.toDictionary()
+            retList.append(m)
+
+        print("success on get non-marked wifilogs")
+
+    except:
+        print("failure on get non-marked wifilogs")
+    
+    return retList
+
+"""
 Change marked column
 """
 @handler.register

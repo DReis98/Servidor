@@ -38,6 +38,10 @@ def medical():
 def map():
     return app.send_static_file('map.html')
 
+@app.route("/stat_wifi")
+def stat_wifi():
+    return app.send_static_file('stat_wifi.html')
+
 @app.route("/googleef86e8bbc6c2f64d.html")
 def cenas():
     return app.send_static_file('googleef86e8bbc6c2f64d.html')
@@ -121,6 +125,54 @@ def getWifiLogsJSON():
     
     return {"wifis": wifis}
 
+@app.route("/api/wifilog/marked/", methods = ['GET'])
+def getWifiLogsMarkedJSON():
+    print("called getWifiLogsMarkedJSON function")
+    wifis = []
+    try:
+        marked = dbWiFi.wifiLogsMarked()
+        non_marked = dbWiFi.wifiLogsNonMarked()
+        print("success on getWifiLogsMarkedJSON")
+        dict_m = {}
+        for m in marked:
+            if m["ssid"] not in dict_m:
+                ab = [1,0]
+                dict_m[m["ssid"]] = ab
+            else:
+                ab = dict_m[m["ssid"]]
+                ab[0] = ab[0] + 1
+                dict_m[m["ssid"]] = ab
+            
+            #print(m)
+        for m in non_marked:
+            if m["ssid"] not in dict_m:
+                ab = [0,1]
+                dict_m[m["ssid"]] = ab
+            else:
+                ab = dict_m[m["ssid"]]
+                ab[1] = ab[1] + 1
+                dict_m[m["ssid"]] = ab
+        #print(dict_m)
+
+        x = dict_m.keys()
+        for a in x:
+            print(a)
+            ab = dict_m[a]
+            if ab[0] == 0:
+                res = 0
+            else:
+                res = ab[0]/(ab[0] + ab[1]) * 100
+            l = [a, ab[0], ab[1], round(res,2)]
+            print(l)
+            wifis.append(l)
+
+        #wifis.append(dict_m)
+    except:
+        wifis = []
+        print("failure on getWifiLogsMarkedJSON")
+    
+    return {"wifis": wifis}
+
 @app.route("/api/gpslog/", methods = ['GET'])
 def getGPSLogsJSON():
     print("called getGPSLogsJSON function")
@@ -130,7 +182,7 @@ def getGPSLogsJSON():
         print("success on getGPSLogsJSON")
     except:
         gpss = []
-        print("success on getGPSLogsJSON")
+        print("failure on getGPSLogsJSON")
     
     return {"gpss": gpss}
 
