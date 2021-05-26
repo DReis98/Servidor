@@ -1,48 +1,85 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Add Map</title>
+<head>
+	<title>Add Map</title>
 
-    <style type="text/css">
-      /* Set the size of the div element that contains the map */
-      #map {
-        height: 800px;
-        /* The height is 700 pixels */
-        width: 100%;
-        /* The width is the width of the web page */
-      }
-    </style>
-    <script>
-      // Initialize and add the map
-      function initMap() {
-        // The location of Uluru
-        const uluru = { lat: 39.6581888, lng: -8.5807927 };
-        const po2 = { lat: 39.6683592, lng:-8.5858989};
-        // The map, centered at Uluru
-        const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 15,
-          center: uluru,
-        });
-        // The marker, positioned at Uluru
-        const marker = new google.maps.Marker({
-          position: uluru,
-          map: map,
-        });
-        const marker2 = new google.maps.Marker({
-          position: po2,
-          map: map,
-        });
-      }
-    </script>
-  </head>
-  <body>
-    <!--The div element for the map -->
-    <div id="map"></div>
+	<style type="text/css">
+		/* Set the size of the div element that contains the map */
+		#map {
+			height: 800px;
+			/* The height is 700 pixels */
+			width: 100%;
+			/* The width is the width of the web page */
+		}
+	</style>
+	<!--Scripts para as tabelas-->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css"  href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
+	<script>
+		// Initialize and add the map
+		function initMap() {
+			// The location of Uluru
+			const uluru = { lat: 39.6581888, lng: -8.5807927 };
+			const po2 = { lat: 39.6683592, lng:-8.5858989};
+			// The map, centered at Uluru
+			const map = new google.maps.Map(document.getElementById("map"), {
+				zoom: 15,
+				center: uluru,
+			});
+			const greenMarker = {
+				path: "M10.453 14.016l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM12 2.016q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z",
+				fillColor: "green",
+				fillOpacity: 1,
+				strokeWeight: 0,
+				rotation: 0,
+				scale: 2,
+				anchor: new google.maps.Point(15, 30),
+			};
+			const redMarker = {
+				path: "M10.453 14.016l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM12 2.016q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z",
+				fillColor: "red",
+				fillOpacity: 1,
+				strokeWeight: 0,
+				rotation: 0,
+				scale: 2,
+				anchor: new google.maps.Point(15, 30),
+			};
 
-    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCit40xUhJVTS6UB134BULwIiArbMsr7w&callback=initMap&libraries=&v=weekly"
-      async
-    ></script>
-  </body>
+			$.ajax({
+				url: '/api/gpslog/',
+				type: "GET",
+				dataType: "json",
+				success: function(data){
+					data["gpss"].forEach( g => {
+						if(g["marked"] == 1) {
+							const marker_ = new google.maps.Marker({
+								position: {lat: g["lat"], lng: g["lon"]},
+								icon: redMarker,
+								map: map,
+							});
+						}
+						else {
+							const marker_ = new google.maps.Marker({
+								position: {lat: g["lat"], lng: g["lon"]},
+								icon: greenMarker,
+								map: map,
+							});
+						}
+						
+					});
+				}
+			});
+		}
+	</script>
+</head>
+<body>
+	<!--The div element for the map -->
+	<div id="map"></div>
+
+	<!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCit40xUhJVTS6UB134BULwIiArbMsr7w&callback=initMap&libraries=&v=weekly" 
+		async
+	></script>
+</body>
 </html>
