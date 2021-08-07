@@ -46,7 +46,7 @@ while(True):
         continue
 
     if message_s[0] == "GPS":
-        number = dbGPS.newGPSLog(id_user, message_s[2], message_s[3], float(message_s[4]), float(message_s[5]))
+        number = dbGPS.newGPSLog(id_user, message_s[2], message_s[3], float(message_s[4]), float(message_s[5]), float(message_s[6]))
         print("GPS Location" + message_s[4]  + " " + message_s[5] + " "+ message_s[6])
         print(number)
         print("")

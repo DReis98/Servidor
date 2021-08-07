@@ -38,13 +38,14 @@ class GPSLog(Base):
     hora_segundo = Column(Integer)
     lat = Column(Float)
     lon = Column(Float)
+    alt = Column(Float)
     marked = Column(Integer)
 
     def __repr__(self):
-        return "<id: %d, id_user: %d, data: %s, data_dia: %d, data_mes: %d, data_ano: %d, hora: %s, hora_hora: %d, hora_minuto: %d, hora_segundo: %d, lat: %f, lon: %f, marked: %d>" % (self.id, self.id_user, self.data, self.data_dia, self.data_mes, self.data_ano, self.hora, self.hora_hora, self.hora_minuto, self.hora_segundo, self.lat, self.lon, self.marked)
+        return "<id: %d, id_user: %d, data: %s, data_dia: %d, data_mes: %d, data_ano: %d, hora: %s, hora_hora: %d, hora_minuto: %d, hora_segundo: %d, lat: %f, lon: %f, alt: %f, marked: %d>" % (self.id, self.id_user, self.data, self.data_dia, self.data_mes, self.data_ano, self.hora, self.hora_hora, self.hora_minuto, self.hora_segundo, self.lat, self.lon, self.alt, self.marked)
 
     def toDictionary(self):
-        return {"id": self.id, "id_user": self.id_user, "data": self.data, "hora": self.hora, "lat": self.lat, "lon": self.lon, "marked": self.marked}
+        return {"id": self.id, "id_user": self.id_user, "data": self.data, "hora": self.hora, "lat": self.lat, "lon": self.lon, "alt": self.alt, "marked": self.marked}
 
 
 # CREATE TABLES FOR THE DATA MODELS
@@ -64,7 +65,7 @@ Creates a new entry in GPSLog database.
 Receives the parameters and returns the sequential id. In case of error, returns 0.
 """
 @handler.register
-def newGPSLog(id_user, data, hora, lat, lon):
+def newGPSLog(id_user, data, hora, lat, lon, alt):
     print("called newGPSLog function")
 
     number = 0
@@ -86,7 +87,7 @@ def newGPSLog(id_user, data, hora, lat, lon):
         print("failure on get date and time from dict")
 
     try:
-        newGPS = GPSLog(id_user = id_user, data = data, data_dia = data_dia, data_mes = data_mes, data_ano = data_ano, hora = hora, hora_hora = hora_hora, hora_minuto = hora_minuto, hora_segundo = hora_segundo, lat = lat, lon = lon, marked = 0)
+        newGPS = GPSLog(id_user = id_user, data = data, data_dia = data_dia, data_mes = data_mes, data_ano = data_ano, hora = hora, hora_hora = hora_hora, hora_minuto = hora_minuto, hora_segundo = hora_segundo, lat = lat, lon = lon, alt = alt, marked = 0)
         session.add(newGPS)
         session.commit()
         number = newGPS.id
