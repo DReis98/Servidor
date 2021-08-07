@@ -98,7 +98,7 @@ def newGPSLog(id_user, data, hora, lat, lon):
     return number
 
 """
-Returns all the entries in the WiFiLog database
+Returns all the entries in the GPSLog database
 """
 @handler.register
 def allGPSLogsDICT():
@@ -111,6 +111,27 @@ def allGPSLogsDICT():
         for gps in gpss:
             g = gps.toDictionary()
             retList.append(g)
+        print("success on allGPSLogsDICT")
+    except:
+        print("failure on allGPSLogsDICT")
+
+    return retList
+
+"""
+Returns all the entries in the GPSLog database
+"""
+@handler.register
+def allGPSLogsMarkedDICT():
+    print("called allGPSLogsMarkedDICT function")
+
+    try:
+        gpss = session.query(GPSLog).all()
+        session.close()
+        retList = []
+        for gps in gpss:
+            if gps.marked == 1:
+                g = gps.toDictionary()
+                retList.append(g)
         print("success on allGPSLogsDICT")
     except:
         print("failure on allGPSLogsDICT")

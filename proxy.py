@@ -186,6 +186,19 @@ def getGPSLogsJSON():
     
     return {"gpss": gpss}
 
+@app.route("/api/gpslog/marked/", methods = ['GET'])
+def getGPSLogsMarkedJSON():
+    print("called getGPSLogsMarkedJSON function")
+
+    try:
+        gpss = dbGPS.allGPSLogsMarkedDICT()
+        print("success on getGPSLogsMarkedJSON")
+    except:
+        gpss = []
+        print("failure on getGPSLogsMarkedJSON")
+    
+    return {"gpss": gpss}
+
 #######
 
 @app.route("/random")
