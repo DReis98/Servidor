@@ -81,3 +81,23 @@ def compareDates(date1, date2):
         return 1
 
     return 1
+
+"""
+    Translates times to minutes and compares them
+"""
+def minutesBetweenTime(t1, t2):
+    h1 = t1["hour"]
+    m1 = t1["minute"]
+
+    h2 = t2["hour"]
+    m2 = t2["minute"]
+
+    time1 = h1 * 60 + m1
+    time2 = h2 * 60 + m2
+
+    dif = time2 - time1
+
+    if dif < 0:
+        dif = -dif
+    
+    return dif
