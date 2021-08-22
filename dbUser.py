@@ -51,6 +51,22 @@ class UserInfected(Base):
     def toDictionary(self):
         return {"id": self.id, "id_user": self.id_user, "dia_inicio": self.dia_inicio, "mes_inicio": self.mes_inicio, "ano_inicio": self.ano_inicio, "dia_fim": self.dia_fim, "mes_fim": self.mes_fim, "ano_fim": self.ano_fim}
 
+class UserPossibleInfected(Base):
+    __tablename__ = 'userpossibleinfected'
+    id = Column(Integer, primary_key = True)
+    id_user = Column(Integer)
+    dia = Column(Integer)
+    mes = Column(Integer)
+    ano = Column(Integer)
+    oc_wifi = Column(Integer)
+    oc_gps = Column(Integer)
+
+    def __repr__(self):
+        return "<id: %d, id_user: %d, data: %d/%d/%d, oc_gps: %d, oc_wifi: %d>" % (self.id, self.id_user, self.dia, self.mes, self.ano, self.oc_gps, self.oc_wifi)
+
+    def toDictionary(self):
+        return {"id": self.id, "id_user": self.id_user, "dia": self.dia, "mes": self.mes, "ano": self.ano, "oc_gps": self.oc_gps, "oc_wifi": self.oc_wifi}
+
 # CREATE TABLES FOR THE DATA MODELS
 Base.metadata.create_all(engine)
 
@@ -62,6 +78,28 @@ handler = XMLRPCHandler('apiUser')
 handler.connect(app, '/apiUser')
 
 # HANDLER FUNCTIONS
+
+"""
+Creates a new entry in UserPossibleInfected database.
+Receives the parameters and returns the sequential id. In case of error, returns 0.
+"""
+@handler.register
+def newUserPossibleInfected(id_user, dia, mes, ano, gps, wifi):
+    print("called newUserPossibleInfected function")
+
+    number = 0
+
+    try:
+        new = UserPossibleInfected(id_user = id_user, dia = dia, mes = mes, ano = ano, oc_gps = gps, oc_wifi = wifi)
+        session.add(new)
+        session.commit()
+        number = new.id
+        session.close()
+        print("success on newUserPossibleInfected")
+    except:
+        print("failure on newUserPossibleInfected")
+
+    return number
 
 """
 Creates a new entry in UserInfected database.
@@ -162,7 +200,7 @@ def getIdUser(username):
         users = session.query(User).filter(User.username == username).first()
         id_user = users.id
         session.close()
-        print("succezs on getIdUser")
+        print("success on getIdUser")
     except:
         print("failure on getIdUser")
     
@@ -207,6 +245,91 @@ def allUsersInfectedDICT():
         print("failure on allUsersInfectedDICT")
 
     return retList
+
+"""
+Returns all the entries in the UserPossibleInfected database
+"""
+@handler.register
+def allUsersPossibleInfectedDICT():
+    print("called allUsersPossibleInfectedDICT function")
+
+    try:
+        userspossibleinfected = session.query(UserPossibleInfected).all()
+        session.close()
+        retList = []
+        for user in userspossibleinfected:
+            u = user.toDictionary()
+            retList.append(u)
+        print("success on allUsersPossibleInfectedDICT")
+    except:
+        print("failure on allUsersPossibleInfectedDICT")
+
+    return retList
+
+@handler.register
+def updateOc(d, gw):
+    # gw = 0 - gps
+    # gw = 1 - wifi
+    print(d)
+    id = d["id"]
+    dia = d["dia"]
+    mes = d["mes"]
+    ano = d["ano"]
+
+    try:
+        user = session.query(UserPossibleInfected).filter(and_(UserPossibleInfected.id_user == id, UserPossibleInfected.dia == dia, UserPossibleInfected.mes == mes, UserPossibleInfected.ano == ano)).all()
+        session.close() 
+
+        count = 0
+        for _ in user:
+            count = count + 1
+
+        if count != 0 and gw == 0:
+            user = session.query(UserPossibleInfected).filter(and_(UserPossibleInfected.id_user == id, UserPossibleInfected.dia == dia, UserPossibleInfected.mes == mes, UserPossibleInfected.ano == ano)).first()
+            ab = user.oc_gps
+            user.oc_gps = ab + 1
+            session.commit()
+        elif count != 0 and gw == 1:
+            user = session.query(UserPossibleInfected).filter(and_(UserPossibleInfected.id_user == id, UserPossibleInfected.dia == dia, UserPossibleInfected.mes == mes, UserPossibleInfected.ano == ano)).first()
+            ab = user.oc_wifi
+            user.oc_wifi = ab + 1
+            session.commit()
+            
+        session.close() 
+        if count == 0:
+            try:
+                if gw == 0:
+                    newUserPossibleInfected(id, dia, mes, ano, 1, 0)
+                else:
+                    newUserPossibleInfected(id, dia, mes, ano, 0, 1)
+                print("success on new entry")
+            except:
+                print("failure on new entry")
+  
+        print("success on searching user possible infected") 
+    except:
+        print("failure on searching user possible infected") 
+
+    """try:
+        user = session.query(UserPossibleInfected).filter(and_(UserPossibleInfected.id_user == id, UserPossibleInfected.dia == dia, UserPossibleInfected.mes == mes, UserPossibleInfected.ano == ano)).first()
+
+        if gw == 0:
+            ab = user.oc_gps
+            user.oc_gps = ab + 1
+            session.commit()
+        else:
+            ab = user.oc_wifi
+            user.oc_wifi = ab + 1
+            session.commit()
+
+        #session.commit()
+        session.close() 
+      
+        print("success on updating user possible infected") 
+    except:
+        print("failure on updating user possible infected") """
+
+    return
 
 # OTHER FUNCTIONS
 

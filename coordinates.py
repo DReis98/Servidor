@@ -97,3 +97,14 @@ def calculate_distance(p1, p2):
     dist = math.sqrt((dif_x * dif_x) + (dif_y * dif_y) + (dif_z * dif_z))
     
     return dist
+
+def distance(lat1, lon1, alt1, lat2, lon2, alt2):
+
+    p1 = coordinate_3(lat1, lon1, alt1)
+    p2 = coordinate_3(lat2, lon2, alt2)
+
+    p1 = calculate_XYZ(p1)
+    p2 = calculate_XYZ(p2)
+
+    dist = calculate_distance(p1, p2)
+    return dist

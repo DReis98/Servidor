@@ -1,5 +1,8 @@
 from flask import *
+from sqlalchemy.sql.functions import user
 from flaskXMLRPC import XMLRPCHandler
+
+from coordinates import *
 
 from dates import *
 
@@ -162,6 +165,63 @@ def changeMarked(id, date1, date2):
         
         date = nextDay(date)
         compDates = compareDates(date, date2)
+
+"""
+Look for possible infected
+"""
+@handler.register
+def usersPossibleInfectedGPS(id, date1, date2):
+    print("called usersPossibleInfectedGPS function")
+
+    tableusers = []
+
+    date = date1
+    compDates = compareDates(date1, date2)
+
+    while compDates == 1:
+        # look for all entries in gps table for each day about id user
+
+        dia = date["day"]
+        mes = date["month"]
+        ano = date["year"]
+
+        try:
+            gpss1 = session.query(GPSLog).filter(and_(GPSLog.id_user == id, GPSLog.data_mes == date["month"], GPSLog.data_dia == date["day"], GPSLog.data_ano == date["year"])).all()
+            session.close()   
+            print("success on query entries for user") 
+        except:
+            print("failure on query entries for user") 
+        
+        # look for all entries in gps table for each day about !id user
+        try:
+            gpss2 = session.query(GPSLog).filter(and_(GPSLog.id_user != id, GPSLog.data_mes == date["month"], GPSLog.data_dia == date["day"], GPSLog.data_ano == date["year"])).all()
+            session.close()   
+            print("success on query entries for other users") 
+        except:
+            print("failure on query entries for other users") 
+
+        for gps in gpss1:            
+            lat = gps.lat
+            lon = gps.lon
+            alt = gps.alt
+
+            for gps2 in gpss2:
+                lat2 = gps2.lat
+                lon2 = gps2.lon 
+                alt2 = gps2.alt
+                if distance(lat, lon, alt, lat2, lon2, alt2) < 50:
+                    entry = {}
+                    entry["id"] = gps2.id_user
+                    entry["dia"] = dia
+                    entry["mes"] = mes
+                    entry["ano"] = ano
+                    tableusers.append(entry)
+            
+        
+        date = nextDay(date)
+        compDates = compareDates(date, date2)
+
+    return tableusers
 
 # OTHER FUNCTIONS
 

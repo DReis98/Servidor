@@ -189,6 +189,60 @@ def changeMarked(id, date1, date2):
         date = nextDay(date)
         compDates = compareDates(date, date2)
 
+"""
+Look for possible infected
+"""
+@handler.register
+def usersPossibleInfectedWiFi(id, date1, date2):
+    print("called usersPossibleInfectedWiFi function")
+
+    tableusers = []
+
+    date = date1
+    compDates = compareDates(date1, date2)
+
+    while compDates == 1:
+        # look for all entries in gps table for each day about id user
+        
+        dia = date["day"]
+        mes = date["month"]
+        ano = date["year"]
+
+        try:
+            wifis1 = session.query(WiFiLog).filter(and_(WiFiLog.id_user == id, WiFiLog.data_mes == date["month"], WiFiLog.data_dia == date["day"], WiFiLog.data_ano == date["year"])).all()
+            session.close()   
+            print("success on query entries for user") 
+        except:
+            print("failure on query entries for user") 
+        
+        # look for all entries in gps table for each day about !id user
+        try:
+            wifis2 = session.query(WiFiLog).filter(and_(WiFiLog.id_user != id, WiFiLog.data_mes == date["month"], WiFiLog.data_dia == date["day"], WiFiLog.data_ano == date["year"])).all()
+            session.close()   
+            print("success on query entries for other users") 
+        except:
+            print("failure on query entries for other users") 
+
+        for wifi in wifis1:            
+            ssid = wifi.ssid
+
+            for wifi2 in wifis2:
+                ssid2 = wifi2.ssid
+
+                if ssid == ssid2:
+                    entry = {}
+                    entry["id"] = wifi2.id_user
+                    entry["dia"] = dia
+                    entry["mes"] = mes
+                    entry["ano"] = ano
+                    tableusers.append(entry)
+            
+        
+        date = nextDay(date)
+        compDates = compareDates(date, date2)
+
+    return tableusers
+
 # OTHER FUNCTIONS
 
 if __name__ == "__main__":

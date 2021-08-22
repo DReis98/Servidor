@@ -1,5 +1,7 @@
 import xmlrpc.server
 
+from sqlalchemy.sql.expression import table
+
 from dates import *
 
 from flask import Flask, render_template, request
@@ -73,6 +75,19 @@ def getUsersInfectedJSON():
 
     return {"usersinfected": usersinfected}
 
+@app.route("/api/userspossibleinfected/", methods = ['GET'])
+def getUsersPossibleInfectedJSON():
+    print("called getUsersPossibleInfectedJSON function")
+
+    try:
+        userspossibleinfected = dbUser.allUsersPossibleInfectedDICT()
+        print("success on getUsersPossibleInfectedJSON")
+    except:
+        userspossibleinfected = []
+        print("failure on getUsersPossibleInfectedJSON")
+
+    return {"userspossibleinfected": userspossibleinfected}
+
 @app.route("/api/users/<int:idUser>/marked/", methods = ['UPDATE'])
 def updateUsersMarkedJSON(idUser):
     print("called updateUsersMarkedJSON function")
@@ -80,6 +95,7 @@ def updateUsersMarkedJSON(idUser):
     j = request.get_json()
     date1 = {}
     date2 = {}
+    # put data into dictionaries
     try:
         date1["day"] = j["dia_inicio"]
         date1["month"] = j["mes_inicio"]
@@ -91,24 +107,63 @@ def updateUsersMarkedJSON(idUser):
     except:
         print("failure on transformation dates to dicts")
 
+    # update gps table
     try:
         dbGPS.changeMarked(idUser, date1, date2)
         print("success on marking gps logs")
     except:
         print("failure on marking gps logs")
 
+    # update wifi table
     try:
         dbWiFi.changeMarked(idUser, date1, date2)
         print("success on marking wifi logs")
     except:
         print("failure on marking wifi logs")
 
+    # new entry on usersinfected table
     try:
         dbUser.newUserInfected(idUser, j["dia_inicio"], j["mes_inicio"], j["ano_inicio"], j["dia_fim"], j["mes_fim"], j["ano_fim"])
         print("success on creating new infected user")
     except:
         print("failure on creating new infected user")
-        
+    
+    # look for users GPS
+    try:
+        tableGPS = dbGPS.usersPossibleInfectedGPS(idUser, date1, date2)
+        print("success on searching for new users infected gps")
+    except:
+        tableGPS = []
+        print("failure on searching for new users infected gps")
+    
+    print("Table GPS:")
+    print(tableGPS)
+
+    try:
+        for a in tableGPS:
+            dbUser.updateOc(a, 0)
+        print("success on updating gps")
+    except:
+        print("failure on updating gps")
+
+    # look for users WiFi
+    try:
+        tableWiFi = dbWiFi.usersPossibleInfectedWiFi(idUser, date1, date2)
+        print("success on searching for new users infected wifi")
+    except:
+        tableWiFi = []
+        print("failure on searching for new users infected wifi")
+    
+    print("Table WiFi:")
+    print(tableWiFi)
+
+    try:
+        for a in tableWiFi:
+            dbUser.updateOc(a, 1)
+        print("success on updating wifi")
+    except:
+        print("failure on updating wifi")
+
     ret = "OK"
     return {"check": ret}
 

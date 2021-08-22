@@ -37,6 +37,21 @@
             });
         }
 
+        function updateUsersPossibleInfectedTable() {
+            $.ajax({
+                url: '/api/userspossibleinfected/',
+                type: "GET",
+                dataType: "json",
+                success: function(data){
+                    $('#usersInfectedPossibleTable > tbody:last-child').empty()
+                    data["userspossibleinfected"].forEach( u => {
+                        $('#usersInfectedPossibleTable > tbody:last-child')
+                            .append('<tr> <td>' + u["id"] + '</td> <td>' + u["id_user"] + '</td> <td>' + u["dia"] + '/' + u["mes"] + '/'  + u["ano"] + '</td> <td>' + u["oc_gps"] + '</td> <td>' + u["oc_wifi"] + '</td> </tr>');
+                    });
+                }
+            });
+        }
+
         $(document).ready(function() {
             updateUsersTable();
             
@@ -45,6 +60,9 @@
             });
             $("#buttonUpdateUsersInfected").click(function(){
                 updateUsersInfectedTable()
+            });
+            $("#buttonUpdateUsersPossibleInfected").click(function(){
+                updateUsersPossibleInfectedTable()
             });
         })
 
@@ -73,6 +91,19 @@
         <thead>
             <tr>
                 <th>ID</th> <th>ID_User</th> <th>Data Inicio</th> <th>Data Fim</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <p></p>
+
+    <button class="ui button" id="buttonUpdateUsersPossibleInfected"> Atualizar Lista de Utilizadores Potencialmente Infetados</button>
+
+    <table class="ui celled table selectable" id="usersInfectedPossibleTable" >
+        <thead>
+            <tr>
+                <th>ID</th> <th>ID_User</th> <th>Data</th> <th>Oc. GPS</th> <th>Oc. WiFi</th>
             </tr>
         </thead>
         <tbody>
