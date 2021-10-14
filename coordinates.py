@@ -49,37 +49,6 @@ def calculate_XYZ(d):
 
     return ret
 
-"""
-def calculate_XYZ2(d):
-    lon = d["lon"]
-    lat = d["lat"]
-    alt = d["alt"]
-
-    degree_to_rad = math.pi / 180
-
-    lon_rad = lon * degree_to_rad
-    lat_rad = lat * degree_to_rad
-
-    a = 6378137
-    b = 6356752.314245
-    a_sqr = a * a
-    b_sqr = b * b
-    e_sqr = 1 - (b_sqr / a_sqr)
-
-    n_phi = a / math.sqrt(1 - (e_sqr * math.sin(lat_rad) * math.sin(lat_rad)))
-
-    x = (n_phi + alt) * math.cos(lat_rad) * math.cos(lon_rad)
-    y = (n_phi + alt) * math.cos(lat_rad) * math.sin(lon_rad)
-    z = ( ((b_sqr/a_sqr) * n_phi) + alt) * math.sin(lat_rad)
-
-    ret = {}
-    ret["x"] = x
-    ret["y"] = y
-    ret["z"] = z
-
-    return ret
-
-"""
 
 def calculate_distance(p1, p2):
     x1 = p1["x"]

@@ -45,7 +45,7 @@ def stat_wifi():
     return app.send_static_file('stat_wifi.html')
 
 @app.route("/googleef86e8bbc6c2f64d.html")
-def cenas():
+def map_google():
     return app.send_static_file('googleef86e8bbc6c2f64d.html')
 
 # ENDPOINTS API
@@ -253,16 +253,6 @@ def getGPSLogsMarkedJSON():
         print("failure on getGPSLogsMarkedJSON")
     
     return {"gpss": gpss}
-
-#######
-
-@app.route("/random")
-def index():
-    return render_template("index.html")
-
-@app.route("/motivation")
-def motivation():
-    return render_template("motivation.html")
 
 if __name__ == "__main__":
     app.run(host = '0.0.0.0', port = 3002, debug = True)

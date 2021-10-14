@@ -310,24 +310,7 @@ def updateOc(d, gw):
     except:
         print("failure on searching user possible infected") 
 
-    """try:
-        user = session.query(UserPossibleInfected).filter(and_(UserPossibleInfected.id_user == id, UserPossibleInfected.dia == dia, UserPossibleInfected.mes == mes, UserPossibleInfected.ano == ano)).first()
-
-        if gw == 0:
-            ab = user.oc_gps
-            user.oc_gps = ab + 1
-            session.commit()
-        else:
-            ab = user.oc_wifi
-            user.oc_wifi = ab + 1
-            session.commit()
-
-        #session.commit()
-        session.close() 
-      
-        print("success on updating user possible infected") 
-    except:
-        print("failure on updating user possible infected") """
+ 
 
     return
 

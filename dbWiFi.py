@@ -105,7 +105,7 @@ def allWifiLogsDICT():
     try:
         wifis = session.query(WiFiLog).all()
         session.close()
-        
+
         for wifi in wifis:
             w = wifi.toDictionary()
             retList.append(w)
